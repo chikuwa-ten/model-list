@@ -1,15 +1,12 @@
 import { SITE_TITLE } from "./config.js";
 import { loadIndex, modelUrl, fileUrl, pageUrl, fmtNum, el, icon, isLocalDev, saveImages } from "./common.js";
 import { getAllStats } from "./api.js";
+import { setupToolbar } from "./toolbar.js";
 import { loadBBModel, disposeObject } from "./bbmodel-loader.js";
 import { renderThumbnail, renderShareImage } from "./viewer.js";
 document.title = SITE_TITLE;
 const grid = document.getElementById("grid");
 const search = document.getElementById("search");
-const sort = document.getElementById("sort");
-const sortBtn = sort.querySelector(".dropdown-btn");
-const sortMenu = sort.querySelector(".dropdown-menu");
-let sortKey = "title";
 const status = document.getElementById("status");
 let models = [];
 let stats = {};
@@ -69,7 +66,7 @@ function applyStats() {
 function render() {
   const q = search.value.trim().toLowerCase();
   const list = models.filter((m) => !q || m.title.toLowerCase().includes(q) || m.id.includes(q) || (m.tags || []).some((t) => t.toLowerCase().includes(q)));
-  const key = sortKey;
+  const key = toolbar.sortKey;
   const val = (m, k) => stats[m.id]?.[k] ?? 0;
   list.sort((a, b) => {
     if (key === "views" || key === "favorites") return val(b, key) - val(a, key) || (b.date || "").localeCompare(a.date || "");
@@ -95,27 +92,10 @@ async function main() {
     return;
   }
   applyStats();
-  if (sortKey === "views" || sortKey === "favorites") render();
+  if (toolbar.sortKey === "views" || toolbar.sortKey === "favorites") render();
 }
-search.addEventListener("input", render);
-function setMenu(open) {
-  sortMenu.hidden = !open;
-  sortBtn.setAttribute("aria-expanded", String(open));
-}
-sortBtn.addEventListener("click", () => setMenu(sortMenu.hidden));
-sortMenu.addEventListener("click", (e) => {
-  const li = e.target.closest("[data-sort]");
-  if (!li) return;
-  sortKey = li.dataset.sort;
-  sortMenu.querySelectorAll("[data-sort]").forEach((x) => x.setAttribute("aria-selected", String(x === li)));
-  sort.querySelector(".dropdown-label").textContent = li.textContent;
-  setMenu(false);
-  render();
-});
-document.addEventListener("click", (e) => {
-  if (!sort.contains(e.target)) setMenu(false);
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") setMenu(false);
+const toolbar = setupToolbar({
+  onSearch: () => render(),
+  onSort: () => render(),
 });
 main();

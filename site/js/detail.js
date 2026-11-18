@@ -1,6 +1,7 @@
 import { SITE_TITLE } from "./config.js";
 import { loadIndex, modelUrl, fileUrl, fmtNum, fmtSize, el, icon } from "./common.js";
 import { recordView, setFavorite } from "./api.js";
+import { setupToolbar, listUrl } from "./toolbar.js";
 import { fetchBBModel, buildBBModel } from "./bbmodel-loader.js";
 import { javaModelBlob, textureFiles } from "./export.js";
 import { ModelViewer } from "./viewer.js";
@@ -116,4 +117,8 @@ async function main() {
   }
   renderStats();
 }
+const toolbar = setupToolbar({
+  onSearch: (q, submit) => { if (submit) location.href = listUrl(q, toolbar.sortKey); },
+  onSort: (key) => { location.href = listUrl(document.getElementById("search").value, key); },
+});
 main();
