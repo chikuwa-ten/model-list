@@ -66,8 +66,7 @@ button, input { font: inherit; color: inherit; }
   border-radius: 8px; background: #780345; color: #fff; font-size: .88rem; font-weight: 700; text-decoration: none;
 }
 .profile-add:hover { background: #941765; }
-.profile-add:not([hidden]) + .profile-copy { margin-top: 8px; background: rgba(255, 255, 255, .5); color: #5a2a4a; }
-.profile-add:not([hidden]) + .profile-copy:hover { background: rgba(255, 255, 255, .7); }
+.profile-add:not([hidden]) + .profile-copy { margin-top: 8px; }
 .profile-copy { margin-top: 14px; width: 100%; height: 36px; border: none; border-radius: 8px; background: #780345; color: #fff; font-size: .88rem; font-weight: 700; cursor: pointer; }
 .profile-copy:hover { background: #941765; }
 .wrap { max-width: 1200px; margin: 0 auto; padding: 24px; }
