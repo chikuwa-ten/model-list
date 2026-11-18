@@ -31,14 +31,14 @@ jobs:
           <meta charset="utf-8">
           <title>Model List</title>
           <meta name="robots" content="noindex">
-          <link rel="canonical" href="https://model-list.model-gallery.workers.dev/">
-          <meta http-equiv="refresh" content="0; url=https://model-list.model-gallery.workers.dev/">
+          <link rel="canonical" href="https://bb-list.pages.dev/">
+          <meta http-equiv="refresh" content="0; url=https://bb-list.pages.dev/">
           <script>
             var p = location.pathname.replace(/^\/model-list\/?/, "");
-            location.replace("https://model-list.model-gallery.workers.dev/" + p + location.search + location.hash);
+            location.replace("https://bb-list.pages.dev/" + p + location.search + location.hash);
           </script>
           </head>
-          <body><a href="https://model-list.model-gallery.workers.dev/">Model List has moved.</a></body>
+          <body><a href="https://bb-list.pages.dev/">Model List has moved.</a></body>
           </html>
           EOF
           cp redirect/index.html redirect/404.html
