@@ -1,4 +1,4 @@
-name: サイトを GitHub Pages に公開
+name: Redirect GitHub Pages to the new site
 
 on:
   push:
@@ -21,18 +21,30 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - id: pages
-        uses: actions/configure-pages@v5
-      - name: モデル一覧とモデルごとのページを生成
-        run: node tools/build.mjs
-        env:
-          SITE_URL: ${{ steps.pages.outputs.base_url }}
+      - name: Make redirect pages
+        run: |
+          mkdir redirect
+          cat > redirect/index.html <<'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+          <meta charset="utf-8">
+          <title>Model List</title>
+          <meta name="robots" content="noindex">
+          <link rel="canonical" href="https://model-list.model-gallery.workers.dev/">
+          <meta http-equiv="refresh" content="0; url=https://model-list.model-gallery.workers.dev/">
+          <script>
+            var p = location.pathname.replace(/^\/model-list\/?/, "");
+            location.replace("https://model-list.model-gallery.workers.dev/" + p + location.search + location.hash);
+          </script>
+          </head>
+          <body><a href="https://model-list.model-gallery.workers.dev/">Model List has moved.</a></body>
+          </html>
+          EOF
+          cp redirect/index.html redirect/404.html
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: redirect
       - id: deployment
         uses: actions/deploy-pages@v4
