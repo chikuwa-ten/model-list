@@ -36,6 +36,8 @@ button, input { font: inherit; color: inherit; }
   color: transparent; -webkit-text-stroke: 1.2px #3d68dc;
 }
 
+.profile img, .profile-banner { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+.profile-btn, .profile-card { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .profile { position: absolute; right: 24px; top: 13px; z-index: 30; }
 .profile-btn { display: block; width: 34px; height: 34px; padding: 0; border: none; border-radius: 50%; overflow: hidden; cursor: pointer; background: #fff; box-shadow: 0 0 0 2px var(--surface); transition: box-shadow .12s ease; }
 .profile-btn:hover, .profile-btn[aria-expanded="true"] { box-shadow: 0 0 0 2px #f4a7c3; }

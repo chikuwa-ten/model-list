@@ -36,6 +36,8 @@ if (PROFILE.userId) {
   add.hidden = false;
 }
 root.appendChild(wrap);
+wrap.querySelectorAll("img").forEach((img) => (img.draggable = false));
+wrap.addEventListener("contextmenu", (e) => e.preventDefault());
 
 const btn = q(".profile-btn");
 const card = q(".profile-card");
