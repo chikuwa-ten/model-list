@@ -1,6 +1,7 @@
 const PROFILE = {
   name: "ちくわぁ",
   username: "chikuwa.net",
+  userId: "790371513391251487",
   status: "img/status.webp",
   avatar: "img/avatar.webp",
   cardAvatar: "img/avatar-full.webp",
@@ -21,6 +22,7 @@ wrap.innerHTML = `
       <div class="profile-body">
         <div class="profile-name"></div>
         <div class="profile-user"><span class="u"></span></div>
+        <a class="profile-add" target="_blank" rel="noopener" hidden>Contact</a>
         <button type="button" class="profile-copy">Copy username</button>
       </div>
     </div>
@@ -28,6 +30,11 @@ wrap.innerHTML = `
 const q = (s) => wrap.querySelector(s);
 q(".profile-name").textContent = PROFILE.name;
 q(".profile-user .u").textContent = PROFILE.username;
+if (PROFILE.userId) {
+  const add = q(".profile-add");
+  add.href = `https://discord.com/users/${PROFILE.userId}`;
+  add.hidden = false;
+}
 root.appendChild(wrap);
 
 const btn = q(".profile-btn");
