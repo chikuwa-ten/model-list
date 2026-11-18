@@ -166,9 +166,12 @@ button, input { font: inherit; color: inherit; }
 .side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .terms-list { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: .88rem; }
 .terms-list li { position: relative; padding-left: 22px; }
-.terms-list li::before { position: absolute; left: 0; width: 16px; text-align: center; font-weight: 700; }
-.terms-list .ok::before { content: "✓"; color: #4cc38a; }
-.terms-list .ng::before { content: "✕"; color: #ff6b6b; }
+.terms-list li::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 14px; height: 14px; transform: translateY(-50%);
+  background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat;
+}
+.terms-list .ok::before { color: #4cc38a; --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"); }
+.terms-list .ng::before { color: #ff6b6b; --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6.5 6.5l11 11M17.5 6.5l-11 11'/%3E%3C/svg%3E"); }
 .terms-list .ng { color: var(--muted); }
 .terms-note { margin: 0; color: var(--muted); font-size: .8rem; overflow-wrap: anywhere; }
 .terms-note a { color: var(--accent); }
