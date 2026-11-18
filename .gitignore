@@ -1,0 +1,12 @@
+node_modules/
+.wrangler/
+api/.dev.vars
+site/models/index.json
+site/m/
+
+# サイトの公開に使わないもの（手元だけに置く）
+README.md
+api/
+package.json
+package-lock.json
+tools/dev.mjs

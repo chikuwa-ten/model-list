@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model List</title>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wdth,wght@125,900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="./"><svg class="logo-cube" viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9 29,23 16,30 3,23 3,9" fill="#3d68dc"/></svg><span class="logo-text">Model List</span></a>
+  </header>
+
+  <main id="main" class="wrap detail">
+    <section class="viewer-box">
+      <div id="viewer" class="viewer loading"></div>
+      <div class="viewer-bar">
+        <div class="model-head">
+          <div class="title-row">
+            <h1 id="title" class="model-title"></h1>
+            <span id="cubes" class="model-date"></span>
+            <time id="date" class="model-date"></time>
+          </div>
+          <div class="viewer-stats">
+            <span class="stat" title="Likes"><span id="fav-mark"></span><span id="favorites">–</span></span>
+            <span class="stat" title="Views"><span id="view-mark"></span><span id="views">–</span></span>
+          </div>
+        </div>
+        <button id="fav-btn" class="fav-icon" type="button" aria-pressed="false" aria-label="Like" disabled></button>
+      </div>
+    </section>
+
+    <aside class="info">
+      <p id="description" class="description"></p>
+
+      <h2 class="sub">Download</h2>
+      <div id="downloads" class="downloads"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="js/detail.js"></script>
+</body>
+</html>

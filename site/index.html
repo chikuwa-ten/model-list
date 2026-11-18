@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Model List</title>
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Advent+Pro:wdth,wght@125,900&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="./"><svg class="logo-cube" viewBox="0 0 32 32" aria-hidden="true"><polygon points="16,2 29,9 29,23 16,30 3,23 3,9" fill="#3d68dc"/></svg><span class="logo-text">Model List</span></a>
+    <div class="toolbar">
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3Zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10Z"/></svg>
+        <input id="search" type="search" placeholder="Search models" aria-label="Search models">
+        <div id="sort" class="dropdown">
+          <button type="button" class="dropdown-btn" aria-haspopup="listbox" aria-expanded="false" aria-label="Sort by">
+            <span class="dropdown-label">Name</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.4 8.6 12 13.2l4.6-4.6L18 10l-6 6-6-6z"/></svg>
+          </button>
+          <ul class="dropdown-menu" role="listbox" aria-label="Sort by" hidden>
+            <li role="option" data-sort="title" aria-selected="true">Name</li>
+            <li role="option" data-sort="new" aria-selected="false">Newest</li>
+            <li role="option" data-sort="favorites" aria-selected="false">Most liked</li>
+            <li role="option" data-sort="views" aria-selected="false">Most viewed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="grid" class="grid"></div>
+    <p id="status" class="status"></p>
+  </main>
+
+  <script type="module" src="js/gallery.js"></script>
+</body>
+</html>
