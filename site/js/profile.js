@@ -1,7 +1,6 @@
 const PROFILE = {
   name: "ちくわぁ",
   username: "chikuwa.net",
-  nickname: "ちょん",
   status: "img/status.webp",
   avatar: "img/avatar.webp",
   cardAvatar: "img/avatar-full.webp",
@@ -21,7 +20,7 @@ wrap.innerHTML = `
       <div class="profile-status" aria-hidden="true"><img src="${PROFILE.status}" alt=""></div>
       <div class="profile-body">
         <div class="profile-name"></div>
-        <div class="profile-user"><span class="u"></span><span class="dot">•</span><span class="n"></span></div>
+        <div class="profile-user"><span class="u"></span></div>
         <button type="button" class="profile-copy">Copy username</button>
       </div>
     </div>
@@ -29,7 +28,6 @@ wrap.innerHTML = `
 const q = (s) => wrap.querySelector(s);
 q(".profile-name").textContent = PROFILE.name;
 q(".profile-user .u").textContent = PROFILE.username;
-q(".profile-user .n").textContent = PROFILE.nickname;
 root.appendChild(wrap);
 
 const btn = q(".profile-btn");
