@@ -41,7 +41,7 @@ function writeModelPages(models) {
   for (const m of models) {
     const title = displayTitle(m.title);
     const desc = m.description || `${title} — Blockbench model`;
-    const image = m.share ? abs(`models/${m.id}/${m.share}?v=${m.shareVersion}`) : null;
+    const image = m.thumbnail ? abs(`models/${m.id}/${m.thumbnail}?v=${m.thumbVersion}`) : null;
     const meta = [
       '<base href="../../">',
       `<meta name="model-id" content="${esc(m.id)}">`,
@@ -52,9 +52,7 @@ function writeModelPages(models) {
       `<meta property="og:description" content="${esc(desc)}">`,
       SITE_URL && `<meta property="og:url" content="${esc(abs(`m/${m.id}/`))}">`,
       image && `<meta property="og:image" content="${esc(image)}">`,
-      image && '<meta property="og:image:width" content="1200">',
-      image && '<meta property="og:image:height" content="630">',
-      `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}">`,
+      `<meta name="twitter:card" content="summary">`,
       `<meta name="twitter:title" content="${esc(title)}">`,
       `<meta name="twitter:description" content="${esc(desc)}">`,
       image && `<meta name="twitter:image" content="${esc(image)}">`
@@ -121,7 +119,6 @@ function build({ quiet = false } = {}) {
     const fresh = (f) => imagesCurrent && files.includes(f);
     const userThumb = files.find((f) => THUMB_RE.test(f)) || null;
     const thumbnail = userThumb || (fresh("_thumb.png") ? "_thumb.png" : null);
-    const share = fresh("_share.png") ? "_share.png" : null;
     const version = (f) => f ? hash : 0;
     const downloads = (Array.isArray(info.downloads) ? info.downloads.filter((f) => files.includes(f)) : files.filter((f) => !HIDDEN.has(f.toLowerCase()) && f !== userThumb && !f.startsWith(".") && !f.startsWith("_"))).sort((a, b) => a === model ? -1 : b === model ? 1 : a.localeCompare(b)).map((f) => ({ file: f, size: fs.statSync(path.join(dir, f)).size }));
     models.push({
@@ -133,9 +130,7 @@ function build({ quiet = false } = {}) {
       model,
       thumbnail,
       thumbVersion: version(thumbnail),
-      share,
-      shareVersion: version(share),
-      needsImages: !userThumb && !fresh("_thumb.png") || !share,
+      needsImages: !userThumb && !fresh("_thumb.png"),
       downloads
     });
   }

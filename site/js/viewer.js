@@ -103,12 +103,8 @@ function renderImage(object, { width, height, background = null, margin = 1.05 }
 function renderThumbnail(object, size = 384) {
   return renderImage(object, { width: size, height: size });
 }
-function renderShareImage(object) {
-  return renderImage(object, { width: 1200, height: 630, background: 1053209, margin: 1.3 });
-}
 export {
   ModelViewer,
   renderImage,
-  renderShareImage,
   renderThumbnail
 };

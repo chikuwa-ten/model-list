@@ -3,7 +3,7 @@ import { loadIndex, modelUrl, fileUrl, pageUrl, fmtNum, el, icon, isLocalDev, sa
 import { getAllStats } from "./api.js";
 import { setupToolbar } from "./toolbar.js";
 import { loadBBModel, disposeObject } from "./bbmodel-loader.js";
-import { renderThumbnail, renderShareImage } from "./viewer.js";
+import { renderThumbnail } from "./viewer.js";
 document.title = SITE_TITLE;
 const grid = document.getElementById("grid");
 const search = document.getElementById("search");
@@ -21,7 +21,7 @@ function thumbObserver() {
       loadBBModel(modelUrl(m)).then(async (obj) => {
         const thumb = await renderThumbnail(obj, 512);
         if (!m.thumbnail) img.src = thumb;
-        if (isLocalDev && m.needsImages) await saveImages(m.id, { thumb, share: await renderShareImage(obj) });
+        if (isLocalDev && m.needsImages) await saveImages(m.id, { thumb });
         disposeObject(obj);
       }).catch((err) => {
         console.warn(m.id, err);
