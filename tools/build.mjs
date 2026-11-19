@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
+import zlib from "node:zlib";
 import { fileURLToPath } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MODELS_DIR = path.join(ROOT, "site", "models");
@@ -19,8 +20,41 @@ function today() {
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 const displayTitle = (t) => String(t).replace(/_/g, " ");
 const IMAGE_RECORD = "_images.json";
+const VIEW_FILE = "_view.dat";
+const VIEW_KEY = Buffer.from("ff45fdd4cc8e655375073b55c00a7099786d89781fc2de6df68053e66389446f", "hex");
+const VIEW_GITIGNORE = ["*", "!.gitignore", "!info.json", `!${VIEW_FILE}`, "!_thumb.png", `!${IMAGE_RECORD}`, ""].join("\n");
+function writeViewFile(dir, file) {
+  const text = fs.readFileSync(path.join(dir, file), "utf8");
+  if (text.startsWith("<lz>")) throw new Error("圧縮された .bbmodel は表示専用に変換できません");
+  const d = JSON.parse(text);
+  const pick = (o, keys) => Object.fromEntries(keys.filter((k) => o[k] !== void 0).map((k) => [k, o[k]]));
+  const textures = (d.textures || []).map((t) => {
+    let source = t.source;
+    if (!source?.startsWith("data:")) {
+      const rel = t.relative_path || t.name;
+      const p = rel && path.join(dir, rel.replace(/\\/g, "/"));
+      source = p && fs.existsSync(p) ? `data:image/png;base64,${fs.readFileSync(p).toString("base64")}` : void 0;
+    }
+    return pick({ ...t, source }, ["uuid", "uv_width", "uv_height", "render_mode", "force_translucent", "source"]);
+  });
+  const noName = ({ name, ...o }) => o;
+  const outline = (o) => typeof o === "string" ? o : { ...noName(o), children: (o.children || []).map(outline) };
+  const data = {
+    meta: d.meta && pick(d.meta, ["box_uv"]),
+    resolution: d.resolution,
+    textures,
+    elements: (d.elements || []).map(noName),
+    groups: (d.groups || []).map(noName),
+    outliner: (d.outliner || []).map(outline)
+  };
+  const buf = zlib.gzipSync(Buffer.from(JSON.stringify(data)), { level: 9 });
+  for (let i = 0; i < buf.length; i++) buf[i] ^= VIEW_KEY[i % VIEW_KEY.length] ^ (i * 7 & 255);
+  fs.writeFileSync(path.join(dir, VIEW_FILE), buf);
+  fs.writeFileSync(path.join(dir, ".gitignore"), VIEW_GITIGNORE);
+}
 function modelHash(dir) {
   const h = crypto.createHash("sha1");
+  if (fs.existsSync(path.join(dir, VIEW_FILE))) return h.update(fs.readFileSync(path.join(dir, VIEW_FILE))).digest("hex").slice(0, 12);
   for (const f of fs.readdirSync(dir).filter((f) => f.toLowerCase().endsWith(".bbmodel")).sort()) h.update(f).update(fs.readFileSync(path.join(dir, f), "utf8").replace(/\r\n/g, "\n"));
   return h.digest("hex").slice(0, 12);
 }
@@ -98,8 +132,23 @@ function build({ quiet = false } = {}) {
         continue;
       }
     }
+    const viewOnly = info.download === false;
     const bbmodels = files.filter((f) => f.toLowerCase().endsWith(".bbmodel")).sort();
-    const model = info.model && files.includes(info.model) ? info.model : bbmodels[0];
+    const source = info.model && files.includes(info.model) ? info.model : bbmodels[0];
+    if (viewOnly && source) {
+      try {
+        writeViewFile(dir, source);
+      } catch (e) {
+        warn(`! スキップ: ${id} を表示専用に変換できません: ${e.message}`);
+        continue;
+      }
+      if (!files.includes(VIEW_FILE)) files.push(VIEW_FILE);
+    } else if (!viewOnly && files.includes(VIEW_FILE)) {
+      fs.rmSync(path.join(dir, VIEW_FILE));
+      fs.rmSync(path.join(dir, ".gitignore"), { force: true });
+      files.splice(files.indexOf(VIEW_FILE), 1);
+    }
+    const model = viewOnly ? (files.includes(VIEW_FILE) ? VIEW_FILE : null) : source;
     if (!model) {
       warn(`! スキップ: ${id}/ に .bbmodel がありません`);
       continue;
@@ -120,7 +169,7 @@ function build({ quiet = false } = {}) {
     const userThumb = files.find((f) => THUMB_RE.test(f)) || null;
     const thumbnail = userThumb || (fresh("_thumb.png") ? "_thumb.png" : null);
     const version = (f) => f ? hash : 0;
-    const downloads = (Array.isArray(info.downloads) ? info.downloads.filter((f) => files.includes(f)) : files.filter((f) => !HIDDEN.has(f.toLowerCase()) && f !== userThumb && !f.startsWith(".") && !f.startsWith("_"))).sort((a, b) => a === model ? -1 : b === model ? 1 : a.localeCompare(b)).map((f) => ({ file: f, size: fs.statSync(path.join(dir, f)).size }));
+    const downloads = viewOnly ? [] : (Array.isArray(info.downloads) ? info.downloads.filter((f) => files.includes(f)) : files.filter((f) => !HIDDEN.has(f.toLowerCase()) && f !== userThumb && !f.startsWith(".") && !f.startsWith("_"))).sort((a, b) => a === model ? -1 : b === model ? 1 : a.localeCompare(b)).map((f) => ({ file: f, size: fs.statSync(path.join(dir, f)).size }));
     models.push({
       id,
       title: String(info.title || id),
@@ -128,6 +177,7 @@ function build({ quiet = false } = {}) {
       tags: Array.isArray(info.tags) ? info.tags.map(String) : [],
       date: String(info.date || ""),
       model,
+      viewOnly,
       thumbnail,
       thumbVersion: version(thumbnail),
       needsImages: !userThumb && !fresh("_thumb.png"),

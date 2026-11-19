@@ -28,9 +28,17 @@ async function parseBBModelText(text) {
   }
   return JSON.parse(text);
 }
+const VIEW_KEY = Uint8Array.from("ff45fdd4cc8e655375073b55c00a7099786d89781fc2de6df68053e66389446f".match(/../g), (h) => parseInt(h, 16));
+async function decodeView(buf) {
+  const b = new Uint8Array(buf);
+  for (let i = 0; i < b.length; i++) b[i] ^= VIEW_KEY[i % VIEW_KEY.length] ^ (i * 7 & 255);
+  const stream = new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"));
+  return JSON.parse(await new Response(stream).text());
+}
 async function fetchBBModel(url) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  if (new URL(url, document.baseURI).pathname.endsWith(".dat")) return decodeView(await res.arrayBuffer());
   return parseBBModelText(await res.text());
 }
 function setRotation(obj, rot) {

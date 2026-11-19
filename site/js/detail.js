@@ -88,7 +88,12 @@ async function main() {
       ...group("png", texButtons)
     ];
   };
-  $("downloads").replaceChildren(...renderDownloads(null, pick("png")));
+  if (m.viewOnly) {
+    $("terms-list").replaceChildren(el("li", { class: "ng" }, "Download"), el("li", { class: "ng" }, "Use of any kind"));
+    $("terms-note").textContent = "This model can only be viewed on this site.";
+    $("download-section").remove();
+    if (!m.description) $("description").closest(".info").remove();
+  } else $("downloads").replaceChildren(...renderDownloads(null, pick("png")));
   $("fav-mark").replaceWith(icon("heartOutline"));
   $("view-mark").replaceWith(icon("eye"));
   renderStats();
@@ -98,6 +103,7 @@ async function main() {
   fetchBBModel(url).then(async (data) => {
     const cubes = (data.elements || []).filter((e) => (e.type || "cube") === "cube").length;
     $("cubes").textContent = `${fmtNum(cubes)} ${cubes === 1 ? "cube" : "cubes"}`;
+    if (m.viewOnly) return buildBBModel(data, url);
     const pngs = pick("png");
     const gen = pngs.length ? [] : (await textureFiles(data)).map((t) => blobButton(t.name, t.blob));
     $("downloads").replaceChildren(...renderDownloads(data, [...pngs, ...gen]));
