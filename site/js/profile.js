@@ -36,6 +36,34 @@ if (PROFILE.userId) {
   add.hidden = false;
 }
 root.appendChild(wrap);
+
+const DL_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3ZM4 19h16v2H4v-2Z"/></svg>';
+const about = document.createElement("div");
+about.className = "about";
+about.innerHTML = `
+  <button type="button" class="about-btn" aria-haspopup="dialog" aria-expanded="false" aria-label="About this site">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 10h2v7h-2v-7Zm0-3h2v2h-2V7Zm1-5a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Z"/></svg>
+  </button>
+  <div class="about-card" role="dialog" aria-label="About this site" hidden>
+    <p class="about-title">About</p>
+    <p>This site is where chikuwaten keeps the models made in Blockbench.</p>
+    <p class="about-sub">The mark on each model in the list shows whether it can be downloaded:</p>
+    <ul class="about-legend">
+      <li><span class="about-mark ok">${DL_SVG}</span>Downloadable</li>
+      <li><span class="about-mark ng">${DL_SVG}</span>View only</li>
+    </ul>
+    <p class="about-date">Launched 2026/11/18</p>
+  </div>`;
+root.appendChild(about);
+const aboutBtn = about.querySelector(".about-btn");
+const aboutCard = about.querySelector(".about-card");
+function setAbout(open) {
+  aboutCard.hidden = !open;
+  aboutBtn.setAttribute("aria-expanded", String(open));
+}
+aboutBtn.addEventListener("click", () => setAbout(aboutCard.hidden));
+document.addEventListener("click", (e) => { if (!about.contains(e.target)) setAbout(false); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") setAbout(false); });
 wrap.querySelectorAll("img").forEach((img) => (img.draggable = false));
 wrap.addEventListener("contextmenu", (e) => e.preventDefault());
 
