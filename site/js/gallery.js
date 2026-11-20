@@ -34,6 +34,9 @@ const observer = thumbObserver();
 function makeCard(m) {
   const thumbBox = el("div", { class: "thumb loading" }, el("img", { alt: "", loading: "lazy" }));
   thumbBox._model = m;
+  thumbBox.append(m.viewOnly
+    ? el("span", { class: "dl-badge no", title: "View only" }, icon("download"))
+    : el("span", { class: "dl-badge", title: "Downloadable" }, icon("download")));
   if (m.thumbnail) {
     thumbBox.querySelector("img").src = `${fileUrl(m, m.thumbnail)}?v=${m.thumbVersion}`;
     thumbBox.classList.remove("loading");

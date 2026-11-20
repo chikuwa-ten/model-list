@@ -120,6 +120,9 @@ button, input { font: inherit; color: inherit; }
 }
 .card:hover .thumb { filter: brightness(.65); }
 .thumb img { width: 88%; height: 88%; object-fit: contain; }
+.dl-badge { position: absolute; top: 8px; right: 8px; color: #3fb950; display: grid; }
+.dl-badge.no { color: #e5534b; }
+.dl-badge svg { width: 18px; height: 18px; fill: currentColor; }
 .thumb img:not([src]) { visibility: hidden; }
 .thumb.loading::after, .viewer.loading::after {
   content: ""; position: absolute; width: 28px; height: 28px;

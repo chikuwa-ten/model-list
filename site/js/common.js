@@ -49,6 +49,7 @@ const ICONS = {
   heartOutline: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2A6 6 0 0 0 12 4.1 6 6 0 0 0 7.5 2C4.4 2 2 4.5 2 7.6c0 3.8 3.4 6.9 8.6 11.6L12 20.5l1.4-1.3C18.6 14.5 22 11.4 22 7.6 22 4.5 19.6 2 16.5 2Zm-4.4 15.7-.1.1-.1-.1C7.1 13.4 4 10.6 4 7.6 4 5.6 5.5 4 7.5 4c1.5 0 3 1 3.6 2.4h1.9C13.5 5 15 4 16.5 4c2 0 3.5 1.6 3.5 3.6 0 3-3.1 5.8-7.9 10.1Z"/></svg>',
   download: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3h2v9.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3ZM4 19h16v2H4v-2Z"/></svg>'
 };
+document.addEventListener("contextmenu", (e) => e.preventDefault());
 function icon(name) {
   const s = document.createElement("span");
   s.className = "icon";
