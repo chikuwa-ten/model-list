@@ -182,6 +182,17 @@ button, input { font: inherit; color: inherit; }
 .fav-icon:active:not(:disabled) { transform: scale(.92); }
 .fav-icon:disabled { opacity: .5; cursor: default; }
 .fav-icon:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.variants { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; padding: 0 4px; }
+.variants[hidden] { display: none; }
+.variant { width: 72px; height: 72px; padding: 0; border: 2px solid transparent; border-radius: 10px; background: var(--surface); cursor: pointer; overflow: hidden; }
+.variant:hover { border-color: var(--line); }
+.variant[aria-pressed="true"] { border-color: var(--accent); }
+.variant img { width: 100%; height: 100%; display: block; object-fit: contain; }
+.variant img:not([src]) { visibility: hidden; }
+.variant.swatch { width: 44px; height: 44px; border-radius: 4px; border: 2px solid #181b1f; }
+.variant.swatch:hover { border-color: #272b33; }
+.variant.swatch[aria-pressed="true"] { border-color: #3e90ff; }
+.variant.swatch img { display: none; }
 
 .info { background: var(--surface); border-radius: var(--radius); padding: 20px; }
 .side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }

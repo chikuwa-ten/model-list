@@ -52,6 +52,13 @@ class ModelViewer {
     this.scene.add(object);
     this.resetView();
   }
+  swapModel(object) {
+    const old = this.model;
+    if (old) this.scene.remove(old);
+    this.model = object;
+    this.scene.add(object);
+    return old;
+  }
   resetView() {
     if (!this.model) return;
     const dist = fitDistance(this.model, this.camera);

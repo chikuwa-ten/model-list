@@ -169,7 +169,9 @@ function build({ quiet = false } = {}) {
     const userThumb = files.find((f) => THUMB_RE.test(f)) || null;
     const thumbnail = userThumb || (fresh("_thumb.png") ? "_thumb.png" : null);
     const version = (f) => f ? hash : 0;
-    const downloads = viewOnly ? [] : (Array.isArray(info.downloads) ? info.downloads.filter((f) => files.includes(f)) : files.filter((f) => !HIDDEN.has(f.toLowerCase()) && f !== userThumb && !f.startsWith(".") && !f.startsWith("_"))).sort((a, b) => a === model ? -1 : b === model ? 1 : a.localeCompare(b)).map((f) => ({ file: f, size: fs.statSync(path.join(dir, f)).size }));
+    const variants = viewOnly || !Array.isArray(info.variants) ? [] : info.variants.filter((v) => v && v.name && (!v.texture || files.includes(v.texture))).map((v) => ({ name: String(v.name), texture: v.texture || null, ...v.base && v.sub ? { base: String(v.base), sub: String(v.sub) } : {} }));
+    const variantFiles = new Set(variants.map((v) => v.texture).filter(Boolean));
+    const downloads = viewOnly ? [] : (Array.isArray(info.downloads) ? info.downloads.filter((f) => files.includes(f)) : files.filter((f) => !HIDDEN.has(f.toLowerCase()) && f !== userThumb && !variantFiles.has(f) && !f.startsWith(".") && !f.startsWith("_"))).sort((a, b) => a === model ? -1 : b === model ? 1 : a.localeCompare(b)).map((f) => ({ file: f, size: fs.statSync(path.join(dir, f)).size }));
     models.push({
       id,
       title: String(info.title || id),
@@ -181,7 +183,8 @@ function build({ quiet = false } = {}) {
       thumbnail,
       thumbVersion: version(thumbnail),
       needsImages: !userThumb && !fresh("_thumb.png"),
-      downloads
+      downloads,
+      ...variants.length > 1 ? { variants } : {}
     });
   }
   models.sort((a, b) => b.date.localeCompare(a.date) || a.id.localeCompare(b.id));
