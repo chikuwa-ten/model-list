@@ -5,6 +5,7 @@
   "date": "2026-11-20",
   "variants": [
     { "name": "Orange", "base": "#e39454", "sub": "#f6ca9f" },
-    { "name": "Black", "texture": "fox_black_tex.png", "base": "#535373", "sub": "#a6a6bf" }
+    { "name": "Black", "texture": "fox_black_tex.png", "base": "#535373", "sub": "#a6a6bf" },
+    { "name": "White", "texture": "fox_white_tex.png", "base": "#7891a5", "sub": "#c8e1eb" }
   ]
 }
